@@ -6,3 +6,47 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+model Profile {
+  cpf         String?
+  createdAt   DateTime @default(now())
+  id          String   @id @default(cuid())
+  phoneNumber String?
+  updatedAt   DateTime @updatedAt
+}
+
+model Organization {
+  createdAt           DateTime            @default(now())
+  description         String?
+  id                  String              @id @default(cuid())
+  imageUrl            String?
+  name                String?
+  organizationMembers OrganizationMember?
+  ownerId             String
+  updatedAt           DateTime            @updatedAt
+}
+
+model Role {
+  createdAt           DateTime            @default(now())
+  id                  String              @id @default(cuid())
+  name                EnumRoleName[]
+  organizationMembers OrganizationMember?
+  permission          String?
+  updatedAt           DateTime            @updatedAt
+}
+
+model OrganizationMember {
+  createdAt      DateTime      @default(now())
+  id             String        @id @default(cuid())
+  organizationId Organization? @relation(fields: [id], references: [id])
+  id             String?       @unique
+  roleId         Role?         @relation(fields: [id], references: [id])
+  id             String?       @unique
+  updatedAt      DateTime      @updatedAt
+  userId         String?
+}
+
+enum EnumRoleName {
+  Permission1
+  Permission2
+}
